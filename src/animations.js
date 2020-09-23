@@ -1,5 +1,5 @@
 import Radium, {StyleRoot} from 'radium';
-import { fadeIn, bounce, bouceOut, bounceIn, rollIn, rubberBand, tada, hinge, jello, flash, flipInX, rotateInDownRight, swing, wobble ,pulse } from 'react-animations';
+import { fadeIn, bounce, bounceIn, rollIn, rubberBand, tada, hinge, jello, flash, flipInX, rotateInDownRight, swing, wobble ,pulse } from 'react-animations';
 
 
 export const animations = [
@@ -46,10 +46,6 @@ export const animations = [
     {
         animation: '1s',
         animationName: Radium.keyframes(fadeIn, 'fadeIn'),
-    },
-    {
-        animation: '1s',
-        animationName: Radium.keyframes(bouceOut, 'bouceOut'),
     },
     {
         animation: '1s',
