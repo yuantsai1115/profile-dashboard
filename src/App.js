@@ -41,7 +41,7 @@ export default function App() {
     const interval = setInterval(()=>{
       let newCards = [];
 
-      let profiles = getSampleProfiles(4);
+      let profiles = getSampleProfiles(8);
       if(profiles.length>0){
         profiles.map((p, i)=>{
           newCards.push(
@@ -95,7 +95,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="App" style={{padding: '15px'}}>
+    <div className="App" style={{padding: '30px'}}>
       <Confetti width={width} height={height} style={{position: 'absolute'}}/>
       <Grid container justify="center" spacing={5}>
         {cards}
