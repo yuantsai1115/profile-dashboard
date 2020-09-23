@@ -9,7 +9,7 @@ export const animations = [
     },
     {
         animation: '1s',
-        animationName: Radium.keyframes(flash, 'flash'),
+        animationName: Radium.keyframes(hinge, 'hinge'),
     },
     {
         animation: '1s',
@@ -42,6 +42,22 @@ export const animations = [
     {
         animation: '1s',
         animationName: Radium.keyframes(rollIn, 'rollIn'),
+    },
+    {
+        animation: '1s',
+        animationName: Radium.keyframes(fadeIn, 'fadeIn'),
+    },
+    {
+        animation: '1s',
+        animationName: Radium.keyframes(bouceOut, 'bouceOut'),
+    },
+    {
+        animation: '1s',
+        animationName: Radium.keyframes(bounceIn, 'bounceIn'),
+    },
+    {
+        animation: '1s',
+        animationName: Radium.keyframes(swing, 'swing'),
     }
 ];
 
