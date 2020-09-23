@@ -8,6 +8,14 @@ body {
   background-image: url(http://www.transparenttextures.com/patterns/textured-paper.png);
 }
 
+.root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

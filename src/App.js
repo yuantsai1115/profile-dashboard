@@ -41,7 +41,7 @@ export default function App() {
     const interval = setInterval(()=>{
       let newCards = [];
 
-      let profiles = getSampleProfiles(8);
+      let profiles = getSampleProfiles(4);
       if(profiles.length>0){
         profiles.map((p, i)=>{
           newCards.push(
@@ -101,5 +101,6 @@ export default function App() {
         {cards}
       </Grid>
     </div>
+    
   );
 }
