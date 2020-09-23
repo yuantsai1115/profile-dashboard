@@ -19,6 +19,7 @@ import { animations, getRandomAnimation } from './animations';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import {profiles, sampleProfiles, getSampleProfilesm, getProfiles, getSampleProfiles} from './profiles';
+import Gallery from 'react-grid-gallery';
 
 const useStyles = makeStyles({
   root: {
@@ -29,6 +30,18 @@ const useStyles = makeStyles({
   media: {
     height: 200,
   },
+  gallery: {
+    //position: 'absolute',
+    // width: '100vw',
+    // height: '100vh',
+    // top: 0,
+    // left: 0,
+    // right: 0,
+    // bottom: 0,
+    //backgroundColor: 'rgba(0,0,0,0.5)',
+    // zIndex: -1,
+    opacity: 0
+  }
 });
 
 export default function App() {
@@ -94,12 +107,39 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  //load all thumbnails
+  const [galleryImages, setGalleryImages] = useState([]);
+
+  useEffect(() => {
+
+    if(sampleProfiles.length>0){
+      let images = [];
+      sampleProfiles.map((p)=>{
+        let img = new Image();
+        img.onload = function() {
+          images.push({
+            src: p.thumbnails,
+            thumbnail: p.thumbnails,
+            thumbnailWidth: this.width,
+            thumbnailHeight: this.height
+          });
+        }
+        img.src = p.thumbnails;
+      });
+      setGalleryImages(images);
+    }
+  }, []);
+
   return (
     <div className="App" style={{padding: '30px'}}>
       <Confetti width={width} height={height} style={{position: 'absolute'}}/>
       <Grid container justify="center" spacing={5}>
         {cards}
       </Grid>
+      <div className={classes.gallery} >
+        <Gallery id="profiles-gallery" images={galleryImages} rowHeight={20}/>
+      </div>
+      {/* <img style={{opacity: 0.5}} src="https://drive.google.com/uc?export=view&id=1UXJXN6_xJt_peBuNFv4CPvAlcdCt3mAo" width={20} height={20}/> */}
     </div>
     
   );

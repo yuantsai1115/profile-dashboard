@@ -12,6 +12,7 @@
     "react-animations": "^1.0.0",
     "react-confetti": "^6.0.0",
     "react-dom": "^16.13.1",
+    "react-grid-gallery": "^0.5.5",
     "react-scripts": "3.4.3",
     "react-use": "^15.3.4"
   },
