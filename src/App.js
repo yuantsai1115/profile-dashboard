@@ -18,14 +18,16 @@ import { fadeIn, bounce, bouceOut, bounceIn, rollIn, rubberBand, tada, hinge, je
 import { animations, getRandomAnimation } from './animations';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
+import {profiles, sampleProfiles, getSampleProfilesm, getProfiles, getSampleProfiles} from './profiles';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 300,
+    width: 300,
+    minHeight: 300,
     borderRadius: 15,
   },
   media: {
-    height: 140,
+    height: 200,
   },
 });
 
@@ -33,56 +35,60 @@ export default function App() {
   const classes = useStyles();
   const { width, height } = useWindowSize();
 
-
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
     const interval = setInterval(()=>{
       let newCards = [];
-      for(let i=0; i<8; ++i){
-        newCards.push(
-          <Grid item >
-            <StyleRoot>
-              <div style={getRandomAnimation()}>
-                <Card key={i} className={classes.root} >
-                  <CardActionArea>
-                    <CardMedia
-                      className={classes.media}
-                      //image="https://material-ui.com/static/images/cards/contemplative-reptile.jpg"
-                      image="https://drive.google.com/uc?export=view&id=1UXJXN6_xJt_peBuNFv4CPvAlcdCt3mAo"
-                      title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                      <Typography display="inline" gutterBottom variant="h5" component="h2">
-                        蜥蜴人
-                      </Typography>
-                      <Chip
-                        variant="outlined"
-                        size="medium"
-                        avatar={<Avatar>M</Avatar>}
-                        label="87級"
-                        style={{marginBottom: '10px', marginLeft: '5px'}}
+
+      let profiles = getSampleProfiles(4);
+      if(profiles.length>0){
+        profiles.map((p, i)=>{
+          newCards.push(
+            <Grid item >
+              <StyleRoot>
+                <div style={getRandomAnimation()}>
+                  <Card key={i} className={classes.root} >
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media}
+                        //image="https://material-ui.com/static/images/cards/contemplative-reptile.jpg"
+                        //image="https://drive.google.com/uc?export=view&id=1UXJXN6_xJt_peBuNFv4CPvAlcdCt3mAo"
+                        image={p.thumbnails}
+                        title="Contemplative Reptile"
                       />
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        雌蜥蜴出軌後，生下了一隻小壁虎。雄蜥蜴大聲地問道：“這是怎麼回事，他為什麼會爬牆？”雌蜥蜴解釋說：“沒什麼，我在訓練兒子攀岩！”
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                  {/* <CardActions> */}
-                    {/* <Button size="small" color="primary">
-                      Share
-                    </Button>
-                    <Button size="small" color="primary">
-                      Learn More
-                    </Button> */}
-                  {/* </CardActions> */}
-                </Card>
-              </div>
-            </StyleRoot>
-          </Grid>
-        );
+                      <CardContent>
+                        <Typography display="inline" gutterBottom variant="h5" component="h2">
+                          {p.name}
+                        </Typography>
+                        <Chip
+                          variant="outlined"
+                          size="medium"
+                          //avatar={<Avatar>M</Avatar>}
+                          label={p.grade}
+                          style={{marginBottom: '10px', marginLeft: '5px'}}
+                        />
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {p.text}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    {/* <CardActions> */}
+                      {/* <Button size="small" color="primary">
+                        Share
+                      </Button>
+                      <Button size="small" color="primary">
+                        Learn More
+                      </Button> */}
+                    {/* </CardActions> */}
+                  </Card>
+                </div>
+              </StyleRoot>
+            </Grid>
+          );
+        });
+        
       }
-      
       setCards(newCards);
     }, 5000);
     return () => clearInterval(interval);
