@@ -25,7 +25,10 @@ import Chip from '@material-ui/core/Chip';
 import {profiles, sampleProfiles, getSampleProfilesm, getProfiles, getSampleProfiles} from './profiles';
 import Gallery from 'react-grid-gallery';
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import { googleCredential } from './googleCredential.js';
 
+const CLIENT_EMAIL = process.env.CLIENT_EMAIL || googleCredential.client_email;
+const PRIVATE_KEY = process.env.PRIVATE_KEY || googleCredential.private_key;
 const SPREADSHEET_ID = process.env.REACT_APP_SPREADSHEET_ID || "1kHFjC_QusihK3G1bLdHI8dI25R1VZIPWutOzNlNWQls";
 const SHEET_ID = process.env.REACT_APP_SHEET_ID || "0";
 
@@ -95,7 +98,7 @@ function QueryApp() {
   let profileData = [];
   let queryParams = new URLSearchParams(useLocation().search);  
   const [cards, setCards] = useState([]);
-  const getProfileCard = (profile) => {
+  const getProfileCard = (profile = {}) => {
     let result = undefined;
     let id = profile.hasOwnProperty("id")? profile.id: new Date().getMilliseconds().toString();
     let name = profile.hasOwnProperty("name")? profile.name: null;
@@ -153,14 +156,11 @@ function QueryApp() {
   //load from google sheets
   const readSpreadsheet = async () => {
     try {
-      const fs = require('fs');
-      let googleCredential;
-      if (fs.existsSync('./cae-alumni-2020-e336c18fcb02.json')) {
-        googleCredential = require('./cae-alumni-2020-e336c18fcb02.json');
-      }else{
-        googleCredential = JSON.parse(process.env.googleCredential);
-      }
-      await doc.useServiceAccountAuth(googleCredential);
+      await doc.useServiceAccountAuth({
+        client_email: CLIENT_EMAIL,
+        private_key: PRIVATE_KEY,
+      });
+
       // loads document properties and worksheets
       await doc.loadInfo();
       console.log(doc);
