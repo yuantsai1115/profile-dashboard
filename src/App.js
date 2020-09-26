@@ -153,7 +153,7 @@ function QueryApp() {
   //load from google sheets
   const readSpreadsheet = async () => {
     try {
-      await doc.useServiceAccountAuth(require('./cae-alumni-2020-e336c18fcb02.json'));
+      await doc.useServiceAccountAuth(require('./cae-alumni-2020-e336c18fcb02.json')|| JSON.parse(process.env.googleCredential));
       // loads document properties and worksheets
       await doc.loadInfo();
       console.log(doc);
