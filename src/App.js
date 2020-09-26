@@ -153,7 +153,14 @@ function QueryApp() {
   //load from google sheets
   const readSpreadsheet = async () => {
     try {
-      await doc.useServiceAccountAuth(require('./cae-alumni-2020-e336c18fcb02.json')|| JSON.parse(process.env.googleCredential));
+      const fs = require('fs');
+      let googleCredential;
+      if (!fs.existsSync('./cae-alumni-2020-e336c18fcb02.json')) {
+        googleCredential = require('./cae-alumni-2020-e336c18fcb02.json');
+      }else{
+        googleCredential = JSON.parse(process.env.googleCredential);
+      }
+      await doc.useServiceAccountAuth(googleCredential);
       // loads document properties and worksheets
       await doc.loadInfo();
       console.log(doc);
