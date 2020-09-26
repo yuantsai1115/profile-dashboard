@@ -25,15 +25,14 @@ import Chip from '@material-ui/core/Chip';
 import {profiles, sampleProfiles, getSampleProfilesm, getProfiles, getSampleProfiles} from './profiles';
 import Gallery from 'react-grid-gallery';
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import { googleCredential } from './googleCredential.js';
+require('dotenv').config();
 
-const CLIENT_EMAIL = process.env.CLIENT_EMAIL || googleCredential.client_email;
-const PRIVATE_KEY = process.env.PRIVATE_KEY || googleCredential.private_key;
+const CLIENT_EMAIL = process.env.CLIENT_EMAIL || process.env.REACT_APP_CLIENT_EMAIL;
+const PRIVATE_KEY = process.env.PRIVATE_KEY || process.env.REACT_APP_PRIVATE_KEY;
 const SPREADSHEET_ID = process.env.REACT_APP_SPREADSHEET_ID || "1kHFjC_QusihK3G1bLdHI8dI25R1VZIPWutOzNlNWQls";
 const SHEET_ID = process.env.REACT_APP_SHEET_ID || "0";
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
-
 const useStyles = makeStyles({
   root: {
     width: 300,
