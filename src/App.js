@@ -155,7 +155,7 @@ function QueryApp() {
     try {
       const fs = require('fs');
       let googleCredential;
-      if (!fs.existsSync('./cae-alumni-2020-e336c18fcb02.json')) {
+      if (fs.existsSync('./cae-alumni-2020-e336c18fcb02.json')) {
         googleCredential = require('./cae-alumni-2020-e336c18fcb02.json');
       }else{
         googleCredential = JSON.parse(process.env.googleCredential);
