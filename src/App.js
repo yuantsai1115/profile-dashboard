@@ -92,8 +92,10 @@ export default function App() {
 }
 
 function QueryApp() {
-  console.log(process.env.REACT_APP_PRIVATE_KEY);
-  console.log(process.env.REACT_APP_CLIENT_EMAIL);
+  // console.log(process.env.REACT_APP_PRIVATE_KEY);
+  // console.log(process.env.REACT_APP_CLIENT_EMAIL);
+  // console.log(SPREADSHEET_ID);
+  // console.log(SHEET_ID);
 
   const classes = useStyles();
   const { width, height } = useWindowSize();
