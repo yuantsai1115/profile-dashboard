@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import ReactDOM from "react-dom";
 import { Link, useLocation, BrowserRouter as Router } from "react-router-dom";
 import logo from './logo.svg';
-import defaultProfileThumbnail from './images/defaultProfileThumbnail.png';
+import defaultProfileThumbnail from './images/defaultProfileThumbnail.jpg';
 import './App.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import Confetti from 'react-confetti';
@@ -110,6 +110,8 @@ function QueryApp() {
     let comment = profile.hasOwnProperty("comment")? profile.comment: null;
     let reformatGoogleDriveUrl = (googleDriveUrl) => {
       let url = googleDriveUrl;
+      if(googleDriveUrl=="")
+        url = defaultProfileThumbnail;
       if(typeof googleDriveUrl === 'string' && googleDriveUrl.indexOf("https://drive.google.com/open?id=")!=-1){
         let id = googleDriveUrl.slice(googleDriveUrl.indexOf("https://drive.google.com/open?id=")+33);
         url = "https://drive.google.com/uc?export=view&id=" + id;
