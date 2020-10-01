@@ -56,6 +56,17 @@ const useStyles = makeStyles({
   }
 });
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © Yuan'}
+      {' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
 const getNonRepitionNumbers = (max, size) => {
   let arrayContainer = []; 
   const genNum = Math.floor(Math.random() * Math.floor(max));
@@ -212,26 +223,6 @@ function QueryApp() {
     return () => clearInterval(interval);
   }, []);
 
-
-  //random get from sample profiles
-  // useEffect(() => {
-  //   const interval = setInterval(()=>{
-  //     let newCards = [];
-  //     let profiles = getSampleProfiles(4);
-  //     if(profiles.length>0){
-  //       profiles.map((p, i)=>{
-  //         console.log(p);
-  //         newCards.push(
-  //           getProfileCard(p)
-  //         );
-  //       });
-        
-  //     }
-  //     setCards(newCards);
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
   //load all thumbnails
   const [galleryImages, setGalleryImages] = useState([]);
 
@@ -265,6 +256,9 @@ function QueryApp() {
         <Gallery id="profiles-gallery" images={galleryImages} rowHeight={20}/>
       </div>
       {/* <img style={{opacity: 0.5}} src="https://drive.google.com/uc?export=view&id=1UXJXN6_xJt_peBuNFv4CPvAlcdCt3mAo" width={20} height={20}/> */}
+      <Box pt={4} style={{position: 'fixed', left: 0, bottom: 0, width: '100%', textAlign: 'center'}}>
+        <Copyright />
+      </Box>
     </div>
     
     
