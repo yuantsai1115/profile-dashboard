@@ -111,24 +111,25 @@ function QueryApp() {
   const classes = useStyles();
   const { width, height } = useWindowSize();
   let profileData = [];
+  const [galleryImages, setGalleryImages] = useState([]);
   let queryParams = new URLSearchParams(useLocation().search);  
   const [cards, setCards] = useState([]);
+  let reformatGoogleDriveUrl = (googleDriveUrl) => {
+    let url = googleDriveUrl;
+    if(googleDriveUrl=="" || googleDriveUrl==undefined)
+      url = defaultProfileThumbnail;
+    if(typeof googleDriveUrl === 'string' && googleDriveUrl.indexOf("https://drive.google.com/open?id=")!=-1){
+      let id = googleDriveUrl.slice(googleDriveUrl.indexOf("https://drive.google.com/open?id=")+33);
+      url = "https://drive.google.com/uc?export=view&id=" + id;
+    }
+    return url;
+  }
   const getProfileCard = (profile = {}) => {
     let result = undefined;
     let id = profile.hasOwnProperty("id")? profile.id: new Date().getMilliseconds().toString();
     let name = profile.hasOwnProperty("name")? profile.name: null;
     let enrol_year = profile.hasOwnProperty("enrol_year")? profile.enrol_year: null;
     let comment = profile.hasOwnProperty("comment")? profile.comment: null;
-    let reformatGoogleDriveUrl = (googleDriveUrl) => {
-      let url = googleDriveUrl;
-      if(googleDriveUrl=="")
-        url = defaultProfileThumbnail;
-      if(typeof googleDriveUrl === 'string' && googleDriveUrl.indexOf("https://drive.google.com/open?id=")!=-1){
-        let id = googleDriveUrl.slice(googleDriveUrl.indexOf("https://drive.google.com/open?id=")+33);
-        url = "https://drive.google.com/uc?export=view&id=" + id;
-      }
-      return url;
-    }
     let thumbnail = profile.hasOwnProperty("thumbnail")? reformatGoogleDriveUrl(profile.thumbnail): defaultProfileThumbnail;
     if(name!=null){
       result = (
@@ -189,13 +190,30 @@ function QueryApp() {
           id: r.id,
           name: r.name,
           enrol_year: r.enrol_year,
-          thumbnail: r.thumbnail,
+          thumbnail: reformatGoogleDriveUrl(r.thumbnail),
           comment: r.comment
         }
         data.push(profile);
         console.log(r);
       });
       profileData = data;
+
+      //load all images to app
+      let images = [];
+      profileData.map((p)=>{
+        let img = new Image();
+        img.onload = function() {
+          images.push({
+            src: p.thumbnail,
+            thumbnail: p.thumbnail,
+            thumbnailWidth: this.width,
+            thumbnailHeight: this.height
+          });
+        }
+        img.src = p.thumbnail;
+      });
+      console.log(images);
+      setGalleryImages(images);
     } catch (e) {
       console.error('Error: ', e);
     }
@@ -223,29 +241,6 @@ function QueryApp() {
     return () => clearInterval(interval);
   }, []);
 
-  //load all thumbnails
-  const [galleryImages, setGalleryImages] = useState([]);
-
-  useEffect(() => {
-
-    if(sampleProfiles.length>0){
-      let images = [];
-      sampleProfiles.map((p)=>{
-        let img = new Image();
-        img.onload = function() {
-          images.push({
-            src: p.thumbnails,
-            thumbnail: p.thumbnails,
-            thumbnailWidth: this.width,
-            thumbnailHeight: this.height
-          });
-        }
-        img.src = p.thumbnails;
-      });
-      setGalleryImages(images);
-    }
-  }, []);
-
   return (
     <div className="App" style={{padding: '30px'}}>
       <Confetti width={width} height={height} style={{position: 'absolute'}}/>
@@ -255,7 +250,9 @@ function QueryApp() {
       <div className={classes.gallery} >
         <Gallery id="profiles-gallery" images={galleryImages} rowHeight={20}/>
       </div>
-      {/* <img style={{opacity: 0.5}} src="https://drive.google.com/uc?export=view&id=1UXJXN6_xJt_peBuNFv4CPvAlcdCt3mAo" width={20} height={20}/> */}
+      {/* {galleryImages.map((p)=>{
+        return <img style={{opacity: 0.5}} src={p.thumbnail} width={20} height={20}/>
+      })} */}
       <Box pt={4} style={{position: 'fixed', left: 0, bottom: 0, width: '100%', textAlign: 'center'}}>
         <Copyright />
       </Box>
