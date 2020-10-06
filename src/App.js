@@ -266,8 +266,8 @@ function QueryApp() {
       <Grid container justify="center" spacing={5}>
         {cards}
       </Grid>
-      <div className={classes.gallery} >
-        <Gallery id="profiles-gallery" images={galleryImages} rowHeight={20}/>
+      <div className={classes.gallery} style={{opacity: queryParams.get("op")? queryParams.get("op"):undefined}}>
+        <Gallery id="profiles-gallery" images={galleryImages} rowHeight={20} />
       </div>
       {/* {galleryImages.map((p)=>{
         return <img style={{opacity: 0.5}} src={p.thumbnail} width={20} height={20}/>
