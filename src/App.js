@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router";
 import ReactDOM from "react-dom";
-import { Link, useLocation, BrowserRouter as Router } from "react-router-dom";
+import { useLocation, BrowserRouter as Router } from "react-router-dom";
 import logo from './logo.svg';
 import defaultProfileThumbnail from './images/defaultProfileThumbnail.jpg';
 import './App.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import Confetti from 'react-confetti';
 import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -25,6 +26,20 @@ import Chip from '@material-ui/core/Chip';
 import {profiles, sampleProfiles, getSampleProfilesm, getProfiles, getSampleProfiles} from './profiles';
 import Gallery from 'react-grid-gallery';
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import { blue } from '@material-ui/core/colors';
+import Divider from '@material-ui/core/Divider';
+import Link from '@material-ui/core/Link';
+
+
 require('dotenv').config();
 
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL || process.env.REACT_APP_CLIENT_EMAIL;
@@ -55,6 +70,12 @@ const useStyles = makeStyles({
     opacity: 0
   }
 });
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
 
 function Copyright() {
   return (
@@ -259,11 +280,12 @@ function QueryApp() {
     return () => clearInterval(interval);
   }, []);
 
+  const [openHelperDialog, setOpenHelperDialog] = useState(true);
   return (
-    <div className="App" style={{padding: '30px'}}>
+    <div className="App" style={{padding: '30px'}} >
       {queryParams.get("an")==1?
         <Confetti width={width} height={height} style={{position: 'absolute'}}/>:undefined}
-      <Grid container justify="center" spacing={5}>
+      <Grid container justify="center" spacing={5} >
         {cards}
       </Grid>
       <div className={classes.gallery} style={{opacity: queryParams.get("op")? queryParams.get("op"):undefined}}>
@@ -272,7 +294,54 @@ function QueryApp() {
       {/* {galleryImages.map((p)=>{
         return <img style={{opacity: 0.5}} src={p.thumbnail} width={20} height={20}/>
       })} */}
-      <Box pt={4} style={{position: 'fixed', left: 0, bottom: 0, width: '100%', textAlign: 'center'}}>
+      <Dialog onClose={(e)=>{setOpenHelperDialog(false)}} aria-labelledby="simple-dialog-title" open={openHelperDialog} style={{padding: '15px'}}>
+        <DialogTitle id="simple-dialog-title">User Guide</DialogTitle>
+        <DialogContent dividers>
+          <Typography variant="body2" >
+            You can define "query parameters" to customise layouts. The following is an example:
+          </Typography>
+          <Typography variant="body2" style={{marginBottom: '15px'}}>
+            <Link href={`${window.location.origin}/?an=1&cn=4`} >
+              {`${window.location.origin}/?an=1&cn=4`}
+            </Link>
+          </Typography>
+          <Typography variant="subtitle1" >
+            Display Mode (default: m=1)
+            <Typography variant="body2" color="textSecondary">
+              0: randomly pick profiles
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              1: sequentially show profiles
+            </Typography>
+          </Typography>
+          <Divider/>
+          <Typography variant="subtitle1" >
+            Card Number (default: cn={DEFAULT_CARD_NUMBER})
+            <Typography variant="body2" color="textSecondary">
+              Number of cards displaying at once. Maximun numbers of cards are displayed when the parameter is greater than the maximum.
+            </Typography>
+          </Typography>
+          <Divider/>
+          <Typography variant="subtitle1" >
+            Background Animation (default: an=0)
+            <Typography variant="body2" color="textSecondary">
+              0: no animation
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              1: show confetti
+            </Typography>
+          </Typography>
+          <Divider/>
+          <Typography variant="subtitle1" >
+            Image Gallery Opacity (default: op=0)
+            <Typography variant="body2" color="textSecondary">
+              Images are all loaded at once when initialising.
+              The opacity, valued from 0 to 1, is for show/hide images gallery.
+            </Typography>
+          </Typography>
+        </DialogContent>
+      </Dialog>
+      <Box pt={4} style={{cursor: 'pointer', position: 'fixed', left: 0, bottom: 0, width: '100%', textAlign: 'center'}} onClick={(e)=>setOpenHelperDialog(!openHelperDialog)}>
         <Copyright />
       </Box>
     </div>
