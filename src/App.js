@@ -40,7 +40,7 @@ const useStyles = makeStyles({
     borderRadius: 15,
   },
   media: {
-    height: 200,
+    minHeight: 300,
   },
   gallery: {
     //position: 'absolute',
@@ -94,6 +94,16 @@ const getRandomProfiles = (profiles, number) => {
   return results;
 }
 
+const getSequentialProfiles = (profiles, index, number) => {
+  let results = [];
+  if(typeof number === 'number' && Array.isArray(profiles)){
+    for(let i=0; i<number; ++i){
+      results.push(profiles[index+i]);
+    }
+  }
+  return results;
+}
+
 export default function App() {
   return (
     <Router>
@@ -131,6 +141,7 @@ function QueryApp() {
     let enrol_year = profile.hasOwnProperty("enrol_year")? profile.enrol_year: null;
     let comment = profile.hasOwnProperty("comment")? profile.comment: null;
     let thumbnail = profile.hasOwnProperty("thumbnail")? reformatGoogleDriveUrl(profile.thumbnail): defaultProfileThumbnail;
+    let job = profile.hasOwnProperty("job")? profile.job: null;
     if(name!=null){
       result = (
         <Grid item >
@@ -144,6 +155,9 @@ function QueryApp() {
                     title="Contemplative Reptile"
                   />
                   <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      {job}
+                    </Typography>
                     <Typography display="inline" gutterBottom variant="h5" component="h2">
                       {name}
                     </Typography>
@@ -156,7 +170,7 @@ function QueryApp() {
                         style={{marginBottom: '10px', marginLeft: '5px'}}
                       />
                     ):undefined}
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    <Typography variant="body2" component="p">
                       {comment}
                     </Typography>
                   </CardContent>
@@ -191,12 +205,13 @@ function QueryApp() {
           name: r.name,
           enrol_year: r.enrol_year,
           thumbnail: reformatGoogleDriveUrl(r.thumbnail),
-          comment: r.comment
+          comment: r.comment? `" ${r.comment} "`:r.comment,
+          job: r.job
         }
         data.push(profile);
         console.log(r);
       });
-      profileData = data;
+      profileData = data.sort((a, b)=>(a.enrol_year>b.enrol_year)? 1 : -1);
 
       //load all images to app
       let images = [];
@@ -219,13 +234,16 @@ function QueryApp() {
     }
   }
 
+  const DEFAULT_CARD_NUMBER=2;
   //get profiles from google spread sheet
   useEffect(()=>{
     readSpreadsheet();
+    let index = 0;
     const interval = setInterval(()=>{
       console.log("profile from spreadsheet interval");
       let newCards = [];
-      let profiles = getRandomProfiles(profileData, queryParams.get("cn")? parseInt(queryParams.get("cn")):4);
+      let cardNumber = queryParams.get("cn")? parseInt(queryParams.get("cn")):DEFAULT_CARD_NUMBER;
+      let profiles = queryParams.get("m")==0? getRandomProfiles(profileData, cardNumber) : getSequentialProfiles(profileData, (index*cardNumber)%profileData.length, cardNumber);
       console.log(profiles);
       if(profiles.length>0){
         profiles.map((p, i)=>{
@@ -234,8 +252,8 @@ function QueryApp() {
             getProfileCard(p)
           );
         });
-        
       }
+      index++;
       setCards(newCards);
     }, 5000);
     return () => clearInterval(interval);
@@ -243,7 +261,8 @@ function QueryApp() {
 
   return (
     <div className="App" style={{padding: '30px'}}>
-      <Confetti width={width} height={height} style={{position: 'absolute'}}/>
+      {queryParams.get("an")==1?
+        <Confetti width={width} height={height} style={{position: 'absolute'}}/>:undefined}
       <Grid container justify="center" spacing={5}>
         {cards}
       </Grid>
