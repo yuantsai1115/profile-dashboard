@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import ReactDOM from "react-dom";
 import { useLocation, BrowserRouter as Router } from "react-router-dom";
 import logo from './logo.svg';
-import defaultProfileThumbnail from './images/defaultProfileThumbnail.jpg';
+import defaultProfileThumbnail from './images/defaultProfileThumbnail.png';
 import './App.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import Confetti from 'react-confetti';
@@ -73,7 +73,7 @@ const useStyles = makeStyles({
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 }))(MuiDialogContent);
 
@@ -173,7 +173,7 @@ function QueryApp() {
                   <CardMedia
                     className={classes.media}
                     image={thumbnail}
-                    title="Contemplative Reptile"
+                    title={name}
                   />
                   <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p">
@@ -230,9 +230,32 @@ function QueryApp() {
           job: r.job
         }
         data.push(profile);
-        console.log(r);
+        //console.log(r);
       });
       profileData = data.sort((a, b)=>(a.enrol_year>b.enrol_year)? 1 : -1);
+
+      //load profiles with no submission
+      const sheetNumber = "2097732203";
+      const unsubmittedSheet = await doc.sheetsById[sheetNumber];
+      const unsubmittedRows = await unsubmittedSheet.getRows();
+      let profileDict = {};
+      profileData.map((d)=>{
+        profileDict[d.name] = d;
+      });
+
+      unsubmittedRows.map((r)=>{
+        // console.log(r);
+        if(profileDict[r.name]==undefined){
+          profileDict[r.name]={id: r.id, name: r.name, enrol_year: r.enrol_year}
+        }
+      });      
+      profileData = [];
+      for(let i=0; i<Object.keys(profileDict).length; ++i){
+
+        profileData.push(profileDict[Object.keys(profileDict)[i]]);
+      }
+      profileData = profileData.sort((a, b)=>(a.enrol_year>b.enrol_year)? 1 : -1);
+      console.log(profileData);
 
       //load all images to app
       let images = [];
@@ -288,12 +311,12 @@ function QueryApp() {
       <Grid container justify="center" spacing={5} >
         {cards}
       </Grid>
-      <div className={classes.gallery} style={{opacity: queryParams.get("op")? queryParams.get("op"):undefined}}>
+      {/* <div className={classes.gallery} style={{opacity: queryParams.get("op")? queryParams.get("op"):undefined}}>
         <Gallery id="profiles-gallery" images={galleryImages} rowHeight={20} />
-      </div>
-      {/* {galleryImages.map((p)=>{
-        return <img style={{opacity: 0.5}} src={p.thumbnail} width={20} height={20}/>
-      })} */}
+      </div> */}
+      {galleryImages.map((p)=>{
+        return <img style={{opacity: queryParams.get("op")? queryParams.get("op"):0}} src={p.thumbnail} width={20} height={20}/>
+      })}
       <Dialog onClose={(e)=>{setOpenHelperDialog(false)}} aria-labelledby="simple-dialog-title" open={openHelperDialog} style={{padding: '15px'}}>
         <DialogTitle id="simple-dialog-title">User Guide</DialogTitle>
         <DialogContent dividers>
