@@ -125,6 +125,15 @@ const getSequentialProfiles = (profiles, index, number) => {
   return results;
 }
 
+const tryRequire = (path) => {
+  try {
+    console.log(`TRY ${path}`);
+   return require(`${path}`);
+  } catch (err) {
+   return null;
+  }
+};
+
 export default function App() {
   return (
     <Router>
@@ -145,10 +154,14 @@ function QueryApp() {
   const [galleryImages, setGalleryImages] = useState([]);
   let queryParams = new URLSearchParams(useLocation().search);  
   const [cards, setCards] = useState([]);
-  let reformatGoogleDriveUrl = (googleDriveUrl) => {
+  let reformatGoogleDriveUrl = (googleDriveUrl, name) => {
     let url = googleDriveUrl;
-    if(googleDriveUrl=="" || googleDriveUrl==undefined)
-      url = defaultProfileThumbnail;
+    if(googleDriveUrl=="" || googleDriveUrl==undefined){
+      console.log("REFORMAT GOOGLE URL");
+      console.log(name);
+      console.log(googleDriveUrl);
+      url = tryRequire(`./images/profilePics/${name}.jpg`)!=null? require(`./images/profilePics/${name}.jpg`): defaultProfileThumbnail;
+    }
     if(typeof googleDriveUrl === 'string' && googleDriveUrl.indexOf("https://drive.google.com/open?id=")!=-1){
       let id = googleDriveUrl.slice(googleDriveUrl.indexOf("https://drive.google.com/open?id=")+33);
       url = "https://drive.google.com/uc?export=view&id=" + id;
@@ -161,7 +174,7 @@ function QueryApp() {
     let name = profile.hasOwnProperty("name")? profile.name: null;
     let enrol_year = profile.hasOwnProperty("enrol_year")? profile.enrol_year: null;
     let comment = profile.hasOwnProperty("comment")? profile.comment: null;
-    let thumbnail = profile.hasOwnProperty("thumbnail")? reformatGoogleDriveUrl(profile.thumbnail): defaultProfileThumbnail;
+    let thumbnail = reformatGoogleDriveUrl(profile.thumbnail, name);
     let job = profile.hasOwnProperty("job")? profile.job: null;
     if(name!=null){
       result = (
@@ -225,7 +238,7 @@ function QueryApp() {
           id: r.id,
           name: r.name,
           enrol_year: r.enrol_year,
-          thumbnail: reformatGoogleDriveUrl(r.thumbnail),
+          thumbnail: reformatGoogleDriveUrl(r.thumbnail, r.name),
           comment: r.comment? `" ${r.comment} "`:r.comment,
           job: r.job
         }
@@ -303,7 +316,7 @@ function QueryApp() {
     return () => clearInterval(interval);
   }, []);
 
-  const [openHelperDialog, setOpenHelperDialog] = useState(true);
+  const [openHelperDialog, setOpenHelperDialog] = useState(false);
   return (
     <div className="App" style={{padding: '30px'}} >
       {queryParams.get("an")==1?
