@@ -3,14 +3,14 @@ Messages and profiles from NTU CAECE Alumni for the gathering in 2020.
 
 https://user-images.githubusercontent.com/119405090/218251032-1e44c789-7ee6-46d3-96ba-d8c0448baf9c.mp4
 
+## Live Demo
+Main branch is deployed to https://cae-alumni-2020.netlify.app/?cn=4&an=1.
+
 ## Features & Settings
 - Random or sequential profiles for slideshow
 - Customisable card number to fit your screen size
 - Hide/Show confetii for delightful moments
 <img width="580" alt="profile-dashboard-setting" src="https://user-images.githubusercontent.com/119405090/218250910-4c9a94b8-89ac-461d-9f2a-11ab1f02026c.png">
-
-## Live Demo
-Main branch is deployed to https://cae-alumni-2020.netlify.app/?cn=4&an=1.
 
 ## Project Setup
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
