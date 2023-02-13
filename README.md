@@ -6,6 +6,8 @@ https://user-images.githubusercontent.com/119405090/218251032-1e44c789-7ee6-46d3
 ## Live Demo
 Main branch is deployed to https://cae-alumni-2020.netlify.app/?cn=4&an=1.
 
+*Click footer for user guide*
+
 ## Features & Settings
 - Random or sequential profiles for slideshow
 - Customisable card number to fit your screen size
